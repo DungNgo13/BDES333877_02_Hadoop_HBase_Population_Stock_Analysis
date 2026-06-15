@@ -284,7 +284,7 @@ bash source-code/03_hdfs/hdfs_backup.sh
 ## 13. HBase Schema (04_hbase)
 
 ### 13.1 Table: `population`
-- **Rowkey:** province name
+- **Rowkey:** province name (e.g., `Ha Noi`)
 - **Column family:** `info`
 - **Columns:** `info:population`, `info:area`, `info:density`, `info:region`
 
@@ -293,15 +293,68 @@ bash source-code/03_hdfs/hdfs_backup.sh
 - **Column family:** `info`
 - **Columns:** `info:symbol`, `info:date`, `info:open_price`, `info:high_price`, `info:low_price`, `info:close_price`, `info:volume`, `info:change_value`, `info:change_percent`
 
+### 13.3 Creation Script
+
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Leader |
-| Source files | `hbase_create_tables.txt`, `hbase_put_population.py`, `hbase_put_stock.py` |
+| Source file | `source-code/04_hbase/hbase_create_tables.txt` |
 | Command | `hbase shell source-code/04_hbase/hbase_create_tables.txt` |
-| Result | — |
+
+**Script behavior:**
+1. Disable and drop `population` if it exists
+2. Create `population` with column family `info`
+3. Disable and drop `stock_price` if it exists
+4. Create `stock_price` with column family `info`
+5. Run `list` to verify both tables exist
+6. Exit HBase shell
+
+> **Note:** The script is idempotent — safe to run multiple times. The `disable`/`drop` commands will show errors on first run (table doesn't exist yet), but this is expected and does not affect table creation.
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add hbase table creation script` |
+
+### 13.4 Import Scripts
+
+| Item | Detail |
+|------|--------|
+| Date | 2026-06-15 |
+| Role | Leader |
+| Source files | `hbase_put_population.py`, `hbase_put_stock.py` |
+
+#### `hbase_put_population.py`
+- **Input:** `dataset/clean/population_clean.csv`
+- **Table:** `population`
+- **Rowkey:** province name (e.g., `Ha Noi`)
+- **Columns:** `info:population`, `info:area`, `info:density`, `info:region`
+- **Connection:** happybase → localhost:9090 (Thrift)
+
+#### `hbase_put_stock.py`
+- **Input:** `dataset/clean/stock_clean.csv`
+- **Table:** `stock_price`
+- **Rowkey:** `symbol_date` (e.g., `REE_2024-01-15`)
+- **Columns:** `info:symbol`, `info:date`, `info:open_price`, `info:high_price`, `info:low_price`, `info:close_price`, `info:volume`, `info:change_value`, `info:change_percent`
+- **Connection:** happybase → localhost:9090 (Thrift)
+
+**Common features:**
+- `main()` + `if __name__ == "__main__": main()`
+- pathlib for file paths (no hard-coded paths)
+- Checks file existence before reading
+- Checks HBase connection and table existence
+- Per-row error handling (skips bad rows, continues import)
+- Prints import summary with row counts
+- Windows-compatible UTF-8 console output
+
+**Test commands:**
+```bash
+python source-code/04_hbase/hbase_put_population.py
+python source-code/04_hbase/hbase_put_stock.py
+```
+
+> **Prerequisites:** HBase + Thrift server running, tables created via `hbase_create_tables.txt`, clean CSVs exist.
+
+| Git commit | `feat: add hbase import scripts for population and stock` |
 
 ---
 
@@ -309,13 +362,46 @@ bash source-code/03_hdfs/hdfs_backup.sh
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Leader |
 | Source files | `hbase_query_demo.py`, `hbase_crud_demo.py` |
-| Command | `python source-code/04_hbase/hbase_query_demo.py` |
-| Result | — |
+
+### 14.1 Query Demo (`hbase_query_demo.py`)
+- Connects to HBase via happybase (localhost:9090)
+- Scans first 5 rows of `population` table
+- Scans first 5 rows of `stock_price` table
+- Decodes bytes → readable strings
+- Prints clear message if table is empty or missing
+
+### 14.2 CRUD Demo (`hbase_crud_demo.py`)
+
+Demonstrates full Create/Read/Update/Delete cycle on `population` table:
+
+| Step | Operation | Detail |
+|------|-----------|--------|
+| 1 | **CREATE** | `put TEST_PROVINCE` with population=999999, area=1234.5, density=810, region=Test Region |
+| 2 | **READ** | `get TEST_PROVINCE` — verify data exists |
+| 3 | **UPDATE** | `put TEST_PROVINCE` — change `info:density` to 1500 |
+| 4 | **READ AGAIN** | `get TEST_PROVINCE` — verify density updated |
+| 5 | **DELETE** | `delete TEST_PROVINCE` |
+| 6 | **VERIFY** | `get TEST_PROVINCE` — confirm row is gone |
+
+**Common features:**
+- `main()` + `if __name__ == "__main__": main()`
+- Error handling for connection, missing tables, and per-operation failures
+- Vietnamese comments
+- Windows-compatible UTF-8 output
+
+**Test commands:**
+```bash
+python source-code/04_hbase/hbase_query_demo.py
+python source-code/04_hbase/hbase_crud_demo.py
+```
+
+> **Prerequisites:** HBase + Thrift server running, tables created.
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add hbase query and crud demos` |
 
 ---
 
