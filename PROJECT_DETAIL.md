@@ -337,6 +337,47 @@ bash source-code/03_hdfs/hdfs_backup.sh
 | Screenshot | — |
 | Git commit | `feat: add hbase table creation script` |
 
+### 13.4 Import Scripts
+
+| Item | Detail |
+|------|--------|
+| Date | 2026-06-15 |
+| Role | Leader |
+| Source files | `hbase_put_population.py`, `hbase_put_stock.py` |
+
+#### `hbase_put_population.py`
+- **Input:** `dataset/clean/population_clean.csv`
+- **Table:** `population`
+- **Rowkey:** province name (e.g., `Ha Noi`)
+- **Columns:** `info:population`, `info:area`, `info:density`, `info:region`
+- **Connection:** happybase → localhost:9090 (Thrift)
+
+#### `hbase_put_stock.py`
+- **Input:** `dataset/clean/stock_clean.csv`
+- **Table:** `stock_price`
+- **Rowkey:** `symbol_date` (e.g., `REE_2024-01-15`)
+- **Columns:** `info:symbol`, `info:date`, `info:open_price`, `info:high_price`, `info:low_price`, `info:close_price`, `info:volume`, `info:change_value`, `info:change_percent`
+- **Connection:** happybase → localhost:9090 (Thrift)
+
+**Common features:**
+- `main()` + `if __name__ == "__main__": main()`
+- pathlib for file paths (no hard-coded paths)
+- Checks file existence before reading
+- Checks HBase connection and table existence
+- Per-row error handling (skips bad rows, continues import)
+- Prints import summary with row counts
+- Windows-compatible UTF-8 console output
+
+**Test commands:**
+```bash
+python source-code/04_hbase/hbase_put_population.py
+python source-code/04_hbase/hbase_put_stock.py
+```
+
+> **Prerequisites:** HBase + Thrift server running, tables created via `hbase_create_tables.txt`, clean CSVs exist.
+
+| Git commit | `feat: add hbase import scripts for population and stock` |
+
 ---
 
 ## 14. HBase CRUD / Query (04_hbase)
