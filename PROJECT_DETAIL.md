@@ -306,7 +306,7 @@ bash source-code/03_hdfs/hdfs_backup.sh
 ## 13. HBase Schema (04_hbase)
 
 ### 13.1 Table: `population`
-- **Rowkey:** province name
+- **Rowkey:** province name (e.g., `Ha Noi`)
 - **Column family:** `info`
 - **Columns:** `info:population`, `info:area`, `info:density`, `info:region`
 
@@ -315,15 +315,27 @@ bash source-code/03_hdfs/hdfs_backup.sh
 - **Column family:** `info`
 - **Columns:** `info:symbol`, `info:date`, `info:open_price`, `info:high_price`, `info:low_price`, `info:close_price`, `info:volume`, `info:change_value`, `info:change_percent`
 
+### 13.3 Creation Script
+
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Leader |
-| Source files | `hbase_create_tables.txt`, `hbase_put_population.py`, `hbase_put_stock.py` |
+| Source file | `source-code/04_hbase/hbase_create_tables.txt` |
 | Command | `hbase shell source-code/04_hbase/hbase_create_tables.txt` |
-| Result | — |
+
+**Script behavior:**
+1. Disable and drop `population` if it exists
+2. Create `population` with column family `info`
+3. Disable and drop `stock_price` if it exists
+4. Create `stock_price` with column family `info`
+5. Run `list` to verify both tables exist
+6. Exit HBase shell
+
+> **Note:** The script is idempotent — safe to run multiple times. The `disable`/`drop` commands will show errors on first run (table doesn't exist yet), but this is expected and does not affect table creation.
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add hbase table creation script` |
 
 ---
 

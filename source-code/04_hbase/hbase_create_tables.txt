@@ -1,0 +1,41 @@
+# hbase_create_tables.txt
+# Tạo bảng HBase cho dự án Big Data: population và stock_price
+# Chạy: hbase shell source-code/04_hbase/hbase_create_tables.txt
+
+# ============================================================
+# Bảng 1: population
+# Rowkey: province (tên tỉnh, ví dụ: "Ha Noi")
+# Column family: info
+# Columns: info:population, info:area, info:density, info:region
+# ============================================================
+
+# Xóa bảng cũ nếu tồn tại
+disable 'population'
+drop 'population'
+
+# Tạo bảng mới với column family 'info'
+create 'population', 'info'
+
+# ============================================================
+# Bảng 2: stock_price
+# Rowkey: symbol_date (ví dụ: "REE_2024-01-15")
+# Column family: info
+# Columns: info:symbol, info:date, info:open_price, info:high_price,
+#          info:low_price, info:close_price, info:volume,
+#          info:change_value, info:change_percent
+# ============================================================
+
+# Xóa bảng cũ nếu tồn tại
+disable 'stock_price'
+drop 'stock_price'
+
+# Tạo bảng mới với column family 'info'
+create 'stock_price', 'info'
+
+# ============================================================
+# Kiểm tra danh sách bảng
+# ============================================================
+list
+
+# Kết thúc
+exit
