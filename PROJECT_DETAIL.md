@@ -128,15 +128,69 @@ This project demonstrates a complete Big Data pipeline:
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Member 2 (population), Member 3 (stock) |
 | Source files | `source-code/01_crawling/crawl_population.py`, `crawl_stock.py` |
 | Input | Web sources |
 | Output | `dataset/raw/population_raw.csv`, `dataset/raw/stock_raw.csv` |
-| Command | `python source-code/01_crawling/crawl_population.py` |
-| Result | — |
+
+### 9.1 Population Crawler (`crawl_population.py`)
+
+| Item | Detail |
+|------|--------|
+| Source URL | `https://en.wikipedia.org/wiki/Provinces_of_Vietnam` |
+| Method | requests + BeautifulSoup4 (HTML table parsing) |
+| Fallback | `dataset/sample/population_sample.csv` |
+| Output | `dataset/raw/population_raw.csv` |
+| Columns | `province, population, area, density, region` |
+
+**Features:**
+- Parses the first wikitable with Province/Population/Area columns
+- Handles rowspan-merged Region column
+- Strips Vietnamese diacritics from province names (e.g., Cao Bằng → Cao Bang)
+- Removes "province" / "city" suffixes
+- Falls back to sample data if crawl fails (network error, page structure change)
+- Prints clear error messages and summary
+- Windows-compatible UTF-8 console output
+
+**Test command:**
+```bash
+python source-code/01_crawling/crawl_population.py
+```
+
+**Test result:** 34 provinces crawled successfully from Wikipedia.
+
+### 9.2 Stock Crawler (`crawl_stock.py`)
+
+| Item | Detail |
+|------|--------|
+| Date | 2026-06-15 |
+| Role | Member 3 |
+| Source APIs | VNDirect API (primary), CafeF (secondary) |
+| Fallback | `dataset/sample/stock_sample.csv` |
+| Output | `dataset/raw/stock_raw.csv` |
+| Symbols | REE, MWG, FPT |
+| Columns | `symbol, date, open_price, high_price, low_price, close_price, volume, change_value, change_percent` |
+
+**Features:**
+- Tries VNDirect API first (`finfo-api.vndirect.com.vn/v4/stock_prices`)
+- Falls back to CafeF HTML scraping if VNDirect fails
+- Falls back to sample data if both sources fail
+- Crawls 1 year of daily data per symbol
+- Computes `change_value` and `change_percent` if not provided by API
+- Sorts output by symbol + date
+- Prints per-symbol statistics summary
+- Windows-compatible UTF-8 console output
+
+**Test command:**
+```bash
+python source-code/01_crawling/crawl_stock.py
+```
+
+**Test result:** Fallback to sample data — 36 rows (12 per symbol) for REE, MWG, FPT.
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add stock crawler with vndirect cafef and fallback` |
 
 ---
 
