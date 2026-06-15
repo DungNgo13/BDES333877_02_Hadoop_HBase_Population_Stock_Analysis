@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tìm kiếm</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Tìm kiếm Dữ liệu</h2>
+    <p><a href="/">Quay lại trang chủ</a></p>
+    
+    <form action="/search" method="GET">
+        <input type="text" name="q" placeholder="Nhập tên tỉnh hoặc mã CP..." value="{{ query }}" required>
+        <button type="submit">Tìm kiếm</button>
+    </form>
+    
+    <br>
+    
+    {% if query %}
+        <h3>Kết quả tìm kiếm cho: "{{ query }}"</h3>
+        
+        <h4>1. Dân số (Tỉnh/Thành phố)</h4>
+        {% if pop_data %}
+            <table border="1" cellpadding="5" cellspacing="0">
+                <tr>
+                    <th>province</th>
+                    <th>population</th>
+                    <th>area</th>
+                    <th>density</th>
+                    <th>region</th>
+                </tr>
+                {% for row in pop_data %}
+                <tr>
+                    <td>{{ row['province'] }}</td>
+                    <td>{{ row['population'] }}</td>
+                    <td>{{ row['area'] }}</td>
+                    <td>{{ row['density'] }}</td>
+                    <td>{{ row['region'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p><i>Không tìm thấy kết quả phù hợp.</i></p>
+        {% endif %}
+        
+        <br>
+        
+        <h4>2. Chứng khoán (Mã CP)</h4>
+        {% if stock_data %}
+            <table border="1" cellpadding="5" cellspacing="0">
+                <tr>
+                    <th>symbol</th>
+                    <th>date</th>
+                    <th>open_price</th>
+                    <th>close_price</th>
+                    <th>volume</th>
+                </tr>
+                {% for row in stock_data %}
+                <tr>
+                    <td>{{ row['symbol'] }}</td>
+                    <td>{{ row['date'] }}</td>
+                    <td>{{ row['open_price'] }}</td>
+                    <td>{{ row['close_price'] }}</td>
+                    <td>{{ row['volume'] }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p><i>Không tìm thấy kết quả phù hợp.</i></p>
+        {% endif %}
+        
+    {% endif %}
+</body>
+</html>

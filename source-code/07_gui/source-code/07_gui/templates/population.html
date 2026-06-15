@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dữ liệu Dân số</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Dữ liệu Dân số (Top 100)</h2>
+    <p><a href="/">Quay lại trang chủ</a></p>
+    
+    {% if data %}
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            {% for col in columns %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for row in data %}
+        <tr>
+            {% for col in columns %}
+            <td>{{ row[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>Chưa có dữ liệu. Vui lòng kiểm tra file dataset/clean/population_clean.csv.</p>
+    {% endif %}
+</body>
+</html>
