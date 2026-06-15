@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-mapper.py - MapReduce tim top 10 tinh thanh co dan so dong nhat.
+mapper.py - MapReduce tim top 10 tinh thanh co mat do dan so cao nhat.
 Dau vao: province,population,area,density,region
-Dau ra: TOP \t population|province|region
+Dau ra: TOP \t density|province|region
 """
 
 import sys
@@ -23,16 +23,16 @@ def main():
         # Kiem tra dong hop le (can it nhat 5 cot)
         if len(parts) >= 5:
             province = parts[0].strip()
-            population_str = parts[1].strip()
+            density_str = parts[3].strip()
             region = parts[4].strip()
             
             try:
-                # Chuyen doi dan so sang so nguyen
-                population = int(population_str)
-                # Phat ra: Key="TOP", Value="population|province|region"
-                print(f"TOP\t{population}|{province}|{region}")
+                # Chuyen doi mat do sang so thuc
+                density = float(density_str)
+                # Phat ra: Key="TOP", Value="density|province|region"
+                print(f"TOP\t{density}|{province}|{region}")
             except ValueError:
-                # Bo qua dong neu dan so khong phai la so
+                # Bo qua dong neu mat do khong phai la so
                 pass
 
 if __name__ == "__main__":
