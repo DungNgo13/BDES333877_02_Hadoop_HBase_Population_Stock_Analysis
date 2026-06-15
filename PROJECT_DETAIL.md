@@ -194,14 +194,58 @@ python -c "import pandas as pd; df=pd.read_csv('dataset/sample/stock_sample.csv'
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Leader |
 | Source files | `hdfs_prepare.sh`, `hdfs_upload.sh`, `hdfs_check.sh`, `hdfs_backup.sh` |
 | HDFS Layout | `/bigdata_project/input/`, `/bigdata_project/output/`, `/bigdata_project/backup/` |
-| Command | `bash source-code/03_hdfs/hdfs_prepare.sh` |
-| Result | — |
+
+### 12.1 Script Details
+
+| Script | Purpose | Key Commands |
+|--------|---------|-------------|
+| `hdfs_prepare.sh` | Create HDFS directory structure | `hdfs dfs -mkdir -p` |
+| `hdfs_upload.sh` | Upload clean CSVs to HDFS input | `hdfs dfs -put -f` |
+| `hdfs_check.sh` | List files and preview first 5 lines | `hdfs dfs -ls`, `hdfs dfs -cat \| head` |
+| `hdfs_backup.sh` | Backup input to timestamped folder | `hdfs dfs -cp` |
+
+### 12.2 HDFS Directory Layout
+
+```text
+/bigdata_project/
+├── input/
+│   ├── population_clean.csv
+│   └── stock_clean.csv
+├── output/
+│   ├── population_top_population/
+│   ├── population_top_density/
+│   ├── stock_monthly_avg_close/
+│   ├── stock_yearly_volume/
+│   ├── stock_movement_ratio/
+│   └── stock_yearly_extreme_price/
+└── backup/
+    └── YYYYMMDD_HHMMSS/
+        ├── population_clean.csv
+        └── stock_clean.csv
+```
+
+### 12.3 Test Commands
+
+```bash
+bash source-code/03_hdfs/hdfs_prepare.sh
+bash source-code/03_hdfs/hdfs_upload.sh
+bash source-code/03_hdfs/hdfs_check.sh
+bash source-code/03_hdfs/hdfs_backup.sh
+```
+
+### 12.4 Script Features
+- All scripts use `#!/bin/bash` and `set -e` (fail-fast)
+- Vietnamese comments for readability
+- No hard-coded personal paths
+- `hdfs_upload.sh` checks local file existence before upload
+- `hdfs_backup.sh` creates timestamped backup folders
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add hdfs prepare upload check and backup scripts` |
 
 ---
 
@@ -271,11 +315,21 @@ Each job folder contains: `mapper.py`, `reducer.py`, `run.sh`.
 
 | Item | Detail |
 |------|--------|
+| Date | 2026-06-15 |
+| Role | Leader |
 | Script | `hdfs_backup.sh` |
 | Backup path | `/bigdata_project/backup/YYYYMMDD_HHMMSS/` |
 | Command | `bash source-code/03_hdfs/hdfs_backup.sh` |
+
+### 16.1 Backup Strategy
+- Each backup creates a new timestamped subfolder: `/bigdata_project/backup/YYYYMMDD_HHMMSS/`
+- Both `population_clean.csv` and `stock_clean.csv` are copied from HDFS input (not local)
+- Uses `hdfs dfs -cp` for HDFS-to-HDFS copy (no network transfer)
+- Timestamp format: `date +"%Y%m%d_%H%M%S"` ensures unique backup names
+- Backup path is printed at the end for logging
+
 | Result | — |
-| Git commit | — |
+| Git commit | `feat: add hdfs prepare upload check and backup scripts` |
 
 ---
 
