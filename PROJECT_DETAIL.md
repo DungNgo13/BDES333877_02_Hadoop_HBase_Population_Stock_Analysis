@@ -164,9 +164,31 @@ python source-code/01_crawling/crawl_population.py
 
 | Item | Detail |
 |------|--------|
-| Status | Not yet implemented |
-| Command | `python source-code/01_crawling/crawl_stock.py` |
-| Result | — |
+| Date | 2026-06-15 |
+| Role | Member 3 |
+| Source APIs | VNDirect API (primary), CafeF (secondary) |
+| Fallback | `dataset/sample/stock_sample.csv` |
+| Output | `dataset/raw/stock_raw.csv` |
+| Symbols | REE, MWG, FPT |
+| Columns | `symbol, date, open_price, high_price, low_price, close_price, volume, change_value, change_percent` |
+
+**Features:**
+- Tries VNDirect API first (`finfo-api.vndirect.com.vn/v4/stock_prices`)
+- Falls back to CafeF HTML scraping if VNDirect fails
+- Falls back to sample data if both sources fail
+- Crawls 1 year of daily data per symbol
+- Computes `change_value` and `change_percent` if not provided by API
+- Sorts output by symbol + date
+- Prints per-symbol statistics summary
+- Windows-compatible UTF-8 console output
+
+**Test command:**
+```bash
+python source-code/01_crawling/crawl_stock.py
+```
+
+**Test result:** Fallback to sample data — 36 rows (12 per symbol) for REE, MWG, FPT.
+
 | Screenshot | — |
 | Git commit | `feat: add stock crawler with vndirect cafef and fallback` |
 
@@ -183,7 +205,7 @@ python source-code/01_crawling/crawl_population.py
 | Output | `dataset/clean/population_clean.csv`, `dataset/clean/stock_clean.csv` |
 | Validation | `test_population_cleaning.py`, `test_stock_cleaning.py` |
 | Command | `python source-code/02_cleaning/clean_population.py` |
-| Result | — |
+| Result | stock_clean.csv has 4698 rows (population_clean.csv untouched) |
 | Screenshot | — |
 | Git commit | — |
 
