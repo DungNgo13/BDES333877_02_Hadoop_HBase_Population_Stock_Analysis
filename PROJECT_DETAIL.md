@@ -168,7 +168,7 @@ python source-code/01_crawling/crawl_population.py
 | Command | `python source-code/01_crawling/crawl_stock.py` |
 | Result | — |
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add stock crawler with vndirect cafef and fallback` |
 
 ---
 
