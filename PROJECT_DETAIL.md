@@ -384,13 +384,46 @@ python source-code/04_hbase/hbase_put_stock.py
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Leader |
 | Source files | `hbase_query_demo.py`, `hbase_crud_demo.py` |
-| Command | `python source-code/04_hbase/hbase_query_demo.py` |
-| Result | — |
+
+### 14.1 Query Demo (`hbase_query_demo.py`)
+- Connects to HBase via happybase (localhost:9090)
+- Scans first 5 rows of `population` table
+- Scans first 5 rows of `stock_price` table
+- Decodes bytes → readable strings
+- Prints clear message if table is empty or missing
+
+### 14.2 CRUD Demo (`hbase_crud_demo.py`)
+
+Demonstrates full Create/Read/Update/Delete cycle on `population` table:
+
+| Step | Operation | Detail |
+|------|-----------|--------|
+| 1 | **CREATE** | `put TEST_PROVINCE` with population=999999, area=1234.5, density=810, region=Test Region |
+| 2 | **READ** | `get TEST_PROVINCE` — verify data exists |
+| 3 | **UPDATE** | `put TEST_PROVINCE` — change `info:density` to 1500 |
+| 4 | **READ AGAIN** | `get TEST_PROVINCE` — verify density updated |
+| 5 | **DELETE** | `delete TEST_PROVINCE` |
+| 6 | **VERIFY** | `get TEST_PROVINCE` — confirm row is gone |
+
+**Common features:**
+- `main()` + `if __name__ == "__main__": main()`
+- Error handling for connection, missing tables, and per-operation failures
+- Vietnamese comments
+- Windows-compatible UTF-8 output
+
+**Test commands:**
+```bash
+python source-code/04_hbase/hbase_query_demo.py
+python source-code/04_hbase/hbase_crud_demo.py
+```
+
+> **Prerequisites:** HBase + Thrift server running, tables created.
+
 | Screenshot | — |
-| Git commit | — |
+| Git commit | `feat: add hbase query and crud demos` |
 
 ---
 
