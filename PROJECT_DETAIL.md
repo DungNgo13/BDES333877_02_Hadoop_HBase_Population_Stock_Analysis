@@ -550,3 +550,38 @@ Commit format: conventional commits, one commit per task.
 
 Git operation note:
 Because two members were not familiar with Git CLI, the leader supported commit/push operations after each member reviewed the assigned files. Technical ownership remains aligned with the task assignment table.
+
+---
+
+## 7. Leader Final Audit
+
+**Audit Date:** 2026-06-15
+**Checked By:** Leader (Agent)
+
+**Files Checked:**
+- Entire repository structure
+- All python scripts in source-code
+- HDFS bash scripts
+- MapReduce mapper/reducer scripts
+- HBase import and query scripts
+- Flask GUI web app
+- Markdown documentation
+
+**Issues Found:**
+- Missing reports/, refs/, libs/ folders.
+- Nested folders due to bad merge conflicts in 05_mapreduce and 07_gui.
+- Missing local check script and population validation script.
+
+**Fixes Applied:**
+- Created missing root directories.
+- Un-nested MapReduce jobs and deleted orphan MapReduce scripts.
+- Un-nested Flask templates to the correct path.
+- Created run_all_local_check.py and test_population_cleaning.py.
+- Appended this audit log to PROJECT_DETAIL.md.
+
+**Remaining Manual Checks:**
+- Verify Hadoop cluster is running before executing HDFS scripts.
+- Check python dependencies: pip install pandas matplotlib flask bs4 requests happybase
+
+**Commit Message:**
+fix: leader final audit structure fixes and check scripts
