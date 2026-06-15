@@ -128,12 +128,44 @@ This project demonstrates a complete Big Data pipeline:
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
 | Role | Member 2 (population), Member 3 (stock) |
 | Source files | `source-code/01_crawling/crawl_population.py`, `crawl_stock.py` |
 | Input | Web sources |
 | Output | `dataset/raw/population_raw.csv`, `dataset/raw/stock_raw.csv` |
-| Command | `python source-code/01_crawling/crawl_population.py` |
+
+### 9.1 Population Crawler (`crawl_population.py`)
+
+| Item | Detail |
+|------|--------|
+| Source URL | `https://en.wikipedia.org/wiki/Provinces_of_Vietnam` |
+| Method | requests + BeautifulSoup4 (HTML table parsing) |
+| Fallback | `dataset/sample/population_sample.csv` |
+| Output | `dataset/raw/population_raw.csv` |
+| Columns | `province, population, area, density, region` |
+
+**Features:**
+- Parses the first wikitable with Province/Population/Area columns
+- Handles rowspan-merged Region column
+- Strips Vietnamese diacritics from province names (e.g., Cao Bằng → Cao Bang)
+- Removes "province" / "city" suffixes
+- Falls back to sample data if crawl fails (network error, page structure change)
+- Prints clear error messages and summary
+- Windows-compatible UTF-8 console output
+
+**Test command:**
+```bash
+python source-code/01_crawling/crawl_population.py
+```
+
+**Test result:** 34 provinces crawled successfully from Wikipedia.
+
+### 9.2 Stock Crawler (`crawl_stock.py`)
+
+| Item | Detail |
+|------|--------|
+| Status | Not yet implemented |
+| Command | `python source-code/01_crawling/crawl_stock.py` |
 | Result | — |
 | Screenshot | — |
 | Git commit | — |
