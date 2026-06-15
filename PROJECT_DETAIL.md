@@ -161,10 +161,32 @@ This project demonstrates a complete Big Data pipeline:
 
 | Item | Detail |
 |------|--------|
-| Date | — |
+| Date | 2026-06-15 |
+| Role | Leader |
 | Files | `dataset/sample/population_sample.csv`, `dataset/sample/stock_sample.csv` |
 | Purpose | Fallback data for local testing without crawling |
-| Git commit | — |
+
+### 11.1 population_sample.csv
+- **Rows:** 20 provinces/cities
+- **Columns:** `province, population, area, density, region`
+- **Regions covered:** Red River Delta, Southeast, South Central Coast, North Central Coast, Mekong River Delta, Central Highlands, Northern Midlands
+- **Notes:** Approximate values based on public statistics. Suitable for MapReduce top-population/top-density jobs and all population charts.
+
+### 11.2 stock_sample.csv
+- **Rows:** 36 (12 per symbol)
+- **Symbols:** REE, MWG, FPT
+- **Columns:** `symbol, date, open_price, high_price, low_price, close_price, volume, change_value, change_percent`
+- **Date range:** 2024-01 to 2024-04
+- **Movement types:** UP (positive change_value), DOWN (negative), FLAT (zero) — all three present for each symbol
+- **Notes:** Covers multiple months for monthly-avg-close job, single year for yearly-volume/extreme-price jobs, and mixed movements for movement-ratio job.
+
+### Verification
+```bash
+python -c "import pandas as pd; df=pd.read_csv('dataset/sample/population_sample.csv'); print('population_sample:', df.shape); print(df.head())"
+python -c "import pandas as pd; df=pd.read_csv('dataset/sample/stock_sample.csv'); print('stock_sample:', df.shape); print(df.head())"
+```
+
+| Git commit | `chore: add sample datasets for local testing` |
 
 ---
 
