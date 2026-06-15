@@ -1,0 +1,35 @@
+province,population,area,density,region
+Cao Bang,573119,6700.4,85,Northeast
+Lang Son,881384,8310.2,106,Northeast
+Phu Tho,4022638,9361.4,429,Northeast
+Quang Ninh,1497477,6207.9,241,Northeast
+Thai Nguyen,1799489,8375.2,214,Northeast
+Tuyen Quang,1865270,13795.5,135,Northeast
+Lao Cai,1778785,13256.9,134,Northwest
+Dien Bien,673091,9539.9,70,Northwest
+Lai Chau,512601,9068.7,56,Northwest
+Son La,1404587,14108.9,99,Northwest
+Bac Ninh,3619433,3194.7,1132,Red River Delta
+Hung Yen,3567943,2514.8,1418,Red River Delta
+Ninh Binh,4412464,3942.6,1119,Red River Delta
+Hanoi,8807523,3359.8,2621,Red River Delta
+Haiphong,4664124,3194.7,1459,Red River Delta
+Ha Tinh,1622901,5994.4,270,North Central
+Nghe An,3831694,16486.5,232,North Central
+Quang Tri,1870845,12700.0,147,North Central
+Thanh Hoa,4324783,11114.7,389,North Central
+Hue,1432986,4947.1,289,North Central
+Dak Lak,3346853,18096.4,184,South Central CoastandCentral Highlands
+Gia Lai,3583693,21576.9,166,South Central CoastandCentral Highlands
+Lam Dong,3872999,24233.1,159,South Central CoastandCentral Highlands
+Khanh Hoa,2243554,8555.9,262,South Central CoastandCentral Highlands
+Quang Ngai,2161755,14832.5,145,South Central CoastandCentral Highlands
+Da Nang,3065628,11859.6,258,South Central CoastandCentral Highlands
+Dong Nai,4491408,12737.2,352,Southeast
+Tay Ninh,3254170,8536.4,381,Southeast
+Ho Chi Minh,14002598,6772.6,2067,Southeast
+An Giang,4952238,9888.9,500,Mekong Delta
+Ca Mau,2606672,7942.4,328,Mekong Delta
+Dong Thap,4370046,5938.6,735,Mekong Delta
+Vinh Long,4257581,6296.2,676,Mekong Delta
+Can Tho,4199824,6360.8,660,Mekong Delta
