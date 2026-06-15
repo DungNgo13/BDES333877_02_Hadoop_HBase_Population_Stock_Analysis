@@ -4,6 +4,8 @@ crawl_stock.py — Thu thap du lieu gia co phieu REE, MWG, FPT.
 
 import sys
 import csv
+import random
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # Dam bao hien thi tieng Viet tren Windows
@@ -26,29 +28,59 @@ RAW_OUTPUT = PROJECT_ROOT / "dataset" / "raw" / "stock_raw.csv"
 
 SYMBOLS = ["REE", "MWG", "FPT"]
 
-# Du lieu mau fallback
-FALLBACK_DATA = [
-    # REE
-    {"symbol": "REE", "date": "2024-01-02", "open_price": 62.5, "high_price": 63.8, "low_price": 62.0, "close_price": 63.5, "volume": 1250000, "change_value": 1.0, "change_percent": 1.6},
-    {"symbol": "REE", "date": "2024-01-03", "open_price": 63.5, "high_price": 64.2, "low_price": 63.0, "close_price": 63.8, "volume": 1180000, "change_value": 0.3, "change_percent": 0.47},
-    {"symbol": "REE", "date": "2024-01-04", "open_price": 63.8, "high_price": 63.8, "low_price": 62.5, "close_price": 62.7, "volume": 980000, "change_value": -1.1, "change_percent": -1.72},
-    # MWG
-    {"symbol": "MWG", "date": "2024-01-02", "open_price": 52.0, "high_price": 53.5, "low_price": 51.8, "close_price": 53.2, "volume": 2500000, "change_value": 1.2, "change_percent": 2.31},
-    {"symbol": "MWG", "date": "2024-01-03", "open_price": 53.2, "high_price": 54.0, "low_price": 52.8, "close_price": 53.8, "volume": 2350000, "change_value": 0.6, "change_percent": 1.13},
-    {"symbol": "MWG", "date": "2024-01-04", "open_price": 53.8, "high_price": 54.2, "low_price": 53.0, "close_price": 53.0, "volume": 2100000, "change_value": -0.8, "change_percent": -1.49},
-    # FPT
-    {"symbol": "FPT", "date": "2024-01-02", "open_price": 89.0, "high_price": 91.0, "low_price": 88.5, "close_price": 90.5, "volume": 1800000, "change_value": 1.5, "change_percent": 1.69},
-    {"symbol": "FPT", "date": "2024-01-03", "open_price": 90.5, "high_price": 92.0, "low_price": 90.0, "close_price": 91.8, "volume": 1750000, "change_value": 1.3, "change_percent": 1.44},
-    {"symbol": "FPT", "date": "2024-01-04", "open_price": 91.8, "high_price": 92.5, "low_price": 90.5, "close_price": 90.8, "volume": 1600000, "change_value": -1.0, "change_percent": -1.09},
-]
+def generate_fallback_data():
+    """Sinh du lieu fallback gia lap tu nam 2020 den 2025 (>= 1000 dong)."""
+    base_prices = {"REE": 60.0, "MWG": 50.0, "FPT": 80.0}
+    data = []
+    start_date = datetime(2020, 1, 1)
+    end_date = datetime(2025, 12, 31)
+    
+    for sym, base_price in base_prices.items():
+        curr_date = start_date
+        curr_price = base_price
+        while curr_date <= end_date:
+            if curr_date.weekday() < 5:  # Chi lay tu Thu 2 den Thu 6
+                change_pct = random.uniform(-0.05, 0.05)
+                open_p = curr_price
+                close_p = open_p * (1 + change_pct)
+                
+                # Dam bao logic gia: low <= open/close <= high
+                high_p = max(open_p, close_p) * (1 + random.uniform(0.001, 0.02))
+                low_p = min(open_p, close_p) * (1 - random.uniform(0.001, 0.02))
+                
+                # Dam bao gia luon > 0
+                if low_p <= 0:
+                    low_p = 0.1
+                if close_p <= 0:
+                    close_p = 0.1
+                    
+                volume = random.randint(100000, 5000000)
+                change_val = close_p - open_p
+                
+                data.append({
+                    "symbol": sym,
+                    "date": curr_date.strftime("%Y-%m-%d"),
+                    "open_price": round(open_p, 2),
+                    "high_price": round(high_p, 2),
+                    "low_price": round(low_p, 2),
+                    "close_price": round(close_p, 2),
+                    "volume": volume,
+                    "change_value": round(change_val, 2),
+                    "change_percent": round(change_pct * 100, 2)
+                })
+                curr_price = close_p
+            curr_date += timedelta(days=1)
+    return data
+
+FALLBACK_DATA = generate_fallback_data()
 
 def build_stock_url(symbol, page=1):
     """
-    Ham tao URL crawl du lieu.
-    Co the doi endpoint tai day neu API doi.
+    Ham tao URL crawl du lieu tren VNDirect API.
+    Mo rong size len 2000 va lay tu 2020-01-01 den 2025-12-31.
     """
     url = "https://finfo-api.vndirect.com.vn/v4/stock_prices"
-    params = f"?sort=date&q=code:{symbol}&size=10&page={page}"
+    params = f"?sort=date&q=code:{symbol}~date:gte:2020-01-01~date:lte:2025-12-31&size=2000&page={page}"
     return url + params
 
 def crawl_symbol(symbol):
@@ -116,7 +148,7 @@ def main():
     # 2. Neu co loi, dung du lieu mau fallback
     if not crawl_success or not all_data:
         print("\n[CANH BAO] Crawl mang that bai hoac API bi khoa.")
-        print("Dung du lieu mau fallback (FALLBACK_DATA).")
+        print("Dung du lieu mau fallback (sinh tu dong tu 2020 den 2025).")
         all_data = FALLBACK_DATA
         
     # Sap xep theo ma co phieu va ngay

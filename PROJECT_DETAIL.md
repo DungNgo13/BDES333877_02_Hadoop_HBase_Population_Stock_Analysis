@@ -187,7 +187,7 @@ python source-code/01_crawling/crawl_population.py
 python source-code/01_crawling/crawl_stock.py
 ```
 
-**Test result:** Fallback to sample data — 36 rows (12 per symbol) for REE, MWG, FPT.
+**Test result:** Fallback to auto-generated historical data (2020-2025) — 4698 rows for REE, MWG, FPT.
 
 | Screenshot | — |
 | Git commit | `feat: add stock crawler with vndirect cafef and fallback` |
@@ -205,7 +205,7 @@ python source-code/01_crawling/crawl_stock.py
 | Output | `dataset/clean/population_clean.csv`, `dataset/clean/stock_clean.csv` |
 | Validation | `test_population_cleaning.py`, `test_stock_cleaning.py` |
 | Command | `python source-code/02_cleaning/clean_population.py` |
-| Result | — |
+| Result | stock_clean.csv has 4698 rows (population_clean.csv untouched) |
 | Screenshot | — |
 | Git commit | — |
 
