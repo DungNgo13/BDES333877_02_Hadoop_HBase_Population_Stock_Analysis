@@ -7,8 +7,7 @@ Project Name : Hadoop HBase Population Stock Analysis
 Topic        : Applying Hadoop MapReduce and HBase to analyze Vietnam urban
                population data and infrastructure/consumer stock price movements.
 Course       : Big Data Essentials
-Semester     : <SEMESTER>
-Instructor   : <INSTRUCTOR_NAME>
+Instructor   : Trần Quang Khải
 
 ================================================================================
                          GROUP INFORMATION
