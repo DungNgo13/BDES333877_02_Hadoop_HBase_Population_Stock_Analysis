@@ -1,20 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Big Data Dashboard</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Data Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Big Data Project Dashboard</h1>
-    <p><strong>Technologies:</strong> Hadoop, HBase, MapReduce, Python, Flask, Pandas</p>
-    
-    <h2>Menu</h2>
-    <ul>
-        <li><a href="/">Trang chủ</a></li>
-        <li><a href="/population">Dữ liệu Dân số (Top 100)</a></li>
-        <li><a href="/stocks">Dữ liệu Chứng khoán (Top 100)</a></li>
-        <li><a href="/charts">Biểu đồ</a></li>
-        <li><a href="/search">Tìm kiếm</a></li>
-    </ul>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">Big Data Dashboard</a>
+        <ul class="nav-links">
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/population">Dân số</a></li>
+            <li><a href="/stocks">Cổ phiếu</a></li>
+            <li><a href="/charts">Biểu đồ</a></li>
+            <li><a href="/search">Tìm kiếm</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Hadoop & HBase Analytics Platform</h1>
+            <p>Hệ thống phân tích dữ liệu lớn về dân số đô thị và giá cổ phiếu tại Việt Nam. Xây dựng trên nền tảng Hadoop ecosystem phục vụ môn học Big Data Essentials.</p>
+            <div class="tech-badges">
+                <span class="badge">Hadoop</span>
+                <span class="badge">HDFS</span>
+                <span class="badge">HBase</span>
+                <span class="badge">MapReduce</span>
+                <span class="badge">Python</span>
+                <span class="badge">Flask</span>
+                <span class="badge">Pandas</span>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <a href="/population" class="card">
+                <h3>👥 Population Data</h3>
+                <p>Khám phá dữ liệu dân số, diện tích, mật độ của 63 tỉnh thành Việt Nam.</p>
+            </a>
+            <a href="/stocks" class="card">
+                <h3>📈 Stock Data</h3>
+                <p>Phân tích biến động giá cổ phiếu lịch sử cho REE, MWG và FPT.</p>
+            </a>
+            <a href="/charts" class="card">
+                <h3>📊 Charts & Analytics</h3>
+                <p>Xem trực quan hóa dữ liệu từ kết quả của các công việc MapReduce.</p>
+            </a>
+            <a href="/search" class="card">
+                <h3>🔍 Search</h3>
+                <p>Tìm kiếm nhanh thông tin một tỉnh thành hoặc mã cổ phiếu cụ thể.</p>
+            </a>
+        </div>
+    </div>
 </body>
 </html>

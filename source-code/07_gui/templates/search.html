@@ -1,73 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Tìm kiếm</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tìm kiếm - Big Data Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h2>Tìm kiếm Dữ liệu</h2>
-    <p><a href="/">Quay lại trang chủ</a></p>
-    
-    <form action="/search" method="GET">
-        <input type="text" name="q" placeholder="Nhập tên tỉnh hoặc mã CP..." value="{{ query }}" required>
-        <button type="submit">Tìm kiếm</button>
-    </form>
-    
-    <br>
-    
-    {% if query %}
-        <h3>Kết quả tìm kiếm cho: "{{ query }}"</h3>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">Big Data Dashboard</a>
+        <ul class="nav-links">
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/population">Dân số</a></li>
+            <li><a href="/stocks">Cổ phiếu</a></li>
+            <li><a href="/charts">Biểu đồ</a></li>
+            <li><a href="/search">Tìm kiếm</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Tra cứu Dữ liệu</h1>
+            <a href="/" class="btn btn-outline">Trở về Trang chủ</a>
+        </div>
+
+        <div class="summary-box">
+            Tìm kiếm nhanh thông tin một tỉnh thành hoặc mã cổ phiếu cụ thể trong cơ sở dữ liệu.
+        </div>
+
+        <form method="GET" action="/search" class="search-form">
+            <input type="text" name="q" value="{{ query }}" placeholder="Nhập tên tỉnh hoặc mã cổ phiếu..." class="search-input" required>
+            <button type="submit" class="btn">Tra cứu</button>
+        </form>
         
-        <h4>1. Dân số (Tỉnh/Thành phố)</h4>
-        {% if pop_data %}
-            <table border="1" cellpadding="5" cellspacing="0">
-                <tr>
-                    <th>province</th>
-                    <th>population</th>
-                    <th>area</th>
-                    <th>density</th>
-                    <th>region</th>
-                </tr>
-                {% for row in pop_data %}
-                <tr>
-                    <td>{{ row['province'] }}</td>
-                    <td>{{ row['population'] }}</td>
-                    <td>{{ row['area'] }}</td>
-                    <td>{{ row['density'] }}</td>
-                    <td>{{ row['region'] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p><i>Không tìm thấy kết quả phù hợp.</i></p>
+        <div class="search-examples">
+            Gợi ý tìm kiếm: <span>REE</span> <span>FPT</span> <span>MWG</span> <span>Ho Chi Minh</span> <span>Hanoi</span>
+        </div>
+
+        {% if query %}
+            <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Kết quả cho: "{{ query }}"</h3>
+            {% if table_html %}
+                <div class="table-container">
+                    {{ table_html|safe }}
+                </div>
+            {% else %}
+                <div class="summary-box" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
+                    Không tìm thấy dữ liệu nào phù hợp với từ khóa của bạn.
+                </div>
+            {% endif %}
         {% endif %}
-        
-        <br>
-        
-        <h4>2. Chứng khoán (Mã CP)</h4>
-        {% if stock_data %}
-            <table border="1" cellpadding="5" cellspacing="0">
-                <tr>
-                    <th>symbol</th>
-                    <th>date</th>
-                    <th>open_price</th>
-                    <th>close_price</th>
-                    <th>volume</th>
-                </tr>
-                {% for row in stock_data %}
-                <tr>
-                    <td>{{ row['symbol'] }}</td>
-                    <td>{{ row['date'] }}</td>
-                    <td>{{ row['open_price'] }}</td>
-                    <td>{{ row['close_price'] }}</td>
-                    <td>{{ row['volume'] }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <p><i>Không tìm thấy kết quả phù hợp.</i></p>
-        {% endif %}
-        
-    {% endif %}
+    </div>
 </body>
 </html>
