@@ -14,25 +14,22 @@ Instructor   : <INSTRUCTOR_NAME>
                          GROUP INFORMATION
 ================================================================================
 
-Member 1 (Leader):
-  Full Name  : <FULL_NAME>
-  Student ID : <STUDENT_ID>
-  Email      : <EMAIL>
-  Phone      : <PHONE>
+Leader:
+  Họ tên     : Ngô Đình Dũng
+  SBD        : 24810080
+  Email      : ngodinhdung13@gmail.com
   Role       : Hadoop core, HDFS, HBase, stock MapReduce, integration
 
-Member 2:
-  Full Name  : <FULL_NAME>
-  Student ID : <STUDENT_ID>
-  Email      : <EMAIL>
-  Phone      : <PHONE>
+Member 1:
+  Họ tên     : Trần Nguyên Gia Phúc
+  SBD        : 24810094
+  Email      : trannguyengiaphuc1995@gmail.com
   Role       : Population crawler, population cleaning, population MapReduce
 
-Member 3:
-  Full Name  : <FULL_NAME>
-  Student ID : <STUDENT_ID>
-  Email      : <EMAIL>
-  Phone      : <PHONE>
+Member 2:
+  Họ tên     : Nguyễn Thanh Hoàng
+  SBD        : 24810082
+  Email      : lekimhanu9@gmail.com
   Role       : Stock crawler, stock cleaning, visualization, Flask GUI
 
 ================================================================================
