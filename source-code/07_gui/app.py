@@ -17,23 +17,36 @@ if sys.stdout and hasattr(sys.stdout, "reconfigure"):
 app = Flask(__name__)
 
 # Duong dan tinh
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-POP_FILE = PROJECT_ROOT / "dataset" / "clean" / "population_clean.csv"
-STOCK_FILE = PROJECT_ROOT / "dataset" / "clean" / "stock_clean.csv"
-CHARTS_DIR = Path(__file__).resolve().parent / "static" / "charts"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+POPULATION_CSV = PROJECT_ROOT / "dataset" / "clean" / "population_clean.csv"
+STOCK_CSV = PROJECT_ROOT / "dataset" / "clean" / "stock_clean.csv"
+CHART_DIR = Path(__file__).resolve().parent / "static" / "charts"
 
 # Dam bao thu muc static/charts ton tai
-CHARTS_DIR.mkdir(parents=True, exist_ok=True)
+CHART_DIR.mkdir(parents=True, exist_ok=True)
+
+def dataframe_to_html(df):
+    if df is None or df.empty:
+        return "<div class='empty-state'>Không có dữ liệu để hiển thị.</div>"
+    return df.to_html(
+        classes="data-table",
+        index=False,
+        border=0,
+        escape=False
+    )
 
 def load_data(filepath):
-    """Doc file CSV bang pandas, tra ve DataFrame hoac None."""
+    """Doc file CSV bang pandas, tra ve DataFrame hoac None, err_msg."""
     if filepath.exists():
         try:
-            return pd.read_csv(filepath)
+            return pd.read_csv(filepath), ""
         except Exception as e:
-            print(f"[LOI] Khong the doc {filepath}: {e}")
-            return None
-    return None
+            return None, f"Lỗi đọc file: {e}"
+    return None, f"Không tìm thấy file: {filepath.name}"
+
+@app.route('/favicon.ico')
+def favicon():
+    return "", 204
 
 @app.route("/")
 def index():
@@ -43,56 +56,77 @@ def index():
 @app.route("/population")
 def population():
     """Trang hien thi du lieu dan so"""
-    df = load_data(POP_FILE)
+    df, err = load_data(POPULATION_CSV)
     if df is not None:
-        data = df.head(100).to_dict(orient="records")
+        table_html = dataframe_to_html(df.head(100))
+        total_rows = len(df)
         columns = df.columns.tolist()
     else:
-        data = []
+        table_html = dataframe_to_html(None)
+        total_rows = 0
         columns = []
-    return render_template("population.html", data=data, columns=columns)
+        
+    return render_template("population.html", 
+                           table_html=table_html, 
+                           total_rows=total_rows, 
+                           columns=columns, 
+                           error=err)
 
 @app.route("/stocks")
 def stocks():
     """Trang hien thi du lieu chung khoan"""
-    df = load_data(STOCK_FILE)
+    df, err = load_data(STOCK_CSV)
     if df is not None:
-        data = df.head(100).to_dict(orient="records")
+        table_html = dataframe_to_html(df.head(100))
+        total_rows = len(df)
         columns = df.columns.tolist()
     else:
-        data = []
+        table_html = dataframe_to_html(None)
+        total_rows = 0
         columns = []
-    return render_template("stocks.html", data=data, columns=columns)
+        
+    return render_template("stocks.html", 
+                           table_html=table_html, 
+                           total_rows=total_rows, 
+                           columns=columns, 
+                           error=err)
 
 @app.route("/charts")
 def charts():
     """Trang hien thi bieu do tu thu muc static/charts"""
-    images = []
-    if CHARTS_DIR.exists():
-        images = [f for f in os.listdir(CHARTS_DIR) if f.endswith(".png")]
-    return render_template("charts.html", images=images)
+    charts = []
+    if CHART_DIR.exists():
+        charts = [f for f in os.listdir(CHART_DIR) if f.endswith(".png")]
+    return render_template("charts.html", charts=charts)
 
 @app.route("/search")
 def search():
     """Trang tim kiem (tinh thanh hoac ma co phieu)"""
     query = request.args.get("q", "").strip().lower()
-    results_pop = []
-    results_stock = []
+    pop_table = ""
+    stock_table = ""
     
     if query:
         # Tim kiem dan so
-        df_pop = load_data(POP_FILE)
+        df_pop, _ = load_data(POPULATION_CSV)
         if df_pop is not None and "province" in df_pop.columns:
             mask = df_pop["province"].astype(str).str.lower().str.contains(query, na=False)
-            results_pop = df_pop[mask].to_dict(orient="records")
+            filtered_pop = df_pop[mask]
+            if not filtered_pop.empty:
+                pop_table = dataframe_to_html(filtered_pop)
             
         # Tim kiem chung khoan
-        df_stock = load_data(STOCK_FILE)
+        df_stock, _ = load_data(STOCK_CSV)
         if df_stock is not None and "symbol" in df_stock.columns:
             mask = df_stock["symbol"].astype(str).str.lower().str.contains(query, na=False)
-            results_stock = df_stock[mask].to_dict(orient="records")
+            filtered_stock = df_stock[mask]
+            if not filtered_stock.empty:
+                stock_table = dataframe_to_html(filtered_stock)
             
-    return render_template("search.html", query=query, pop_data=results_pop, stock_data=results_stock)
+    return render_template("search.html", 
+                           query=query, 
+                           population_table=pop_table, 
+                           stock_table=stock_table)
 
 def main():
     print("=" * 55)

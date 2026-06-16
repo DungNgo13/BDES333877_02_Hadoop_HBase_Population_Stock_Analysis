@@ -39,11 +39,22 @@
 
         {% if query %}
             <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Kết quả cho: "{{ query }}"</h3>
-            {% if table_html %}
+            
+            {% if population_table %}
+                <h4 style="color: var(--secondary-color); margin-top: 1rem;">Dữ liệu Dân số</h4>
                 <div class="table-container">
-                    {{ table_html|safe }}
+                    {{ population_table|safe }}
                 </div>
-            {% else %}
+            {% endif %}
+
+            {% if stock_table %}
+                <h4 style="color: var(--secondary-color); margin-top: 1rem;">Dữ liệu Cổ phiếu</h4>
+                <div class="table-container">
+                    {{ stock_table|safe }}
+                </div>
+            {% endif %}
+
+            {% if not population_table and not stock_table %}
                 <div class="summary-box" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
                     Không tìm thấy dữ liệu nào phù hợp với từ khóa của bạn.
                 </div>

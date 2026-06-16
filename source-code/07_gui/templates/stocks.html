@@ -26,7 +26,14 @@
 
         <div class="summary-box">
             Bảng dưới đây hiển thị tối đa 100 dòng đầu tiên của dữ liệu cổ phiếu (REE, MWG, FPT) đã được làm sạch và xử lý.
+            <br><strong>Tổng số dòng dữ liệu:</strong> {{ total_rows }}
         </div>
+
+        {% if error %}
+        <div class="summary-box" style="background-color: #f8d7da; border-color: #f5c6cb; color: #721c24;">
+            {{ error }}
+        </div>
+        {% endif %}
 
         <div class="table-container">
             {{ table_html|safe }}
