@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # run.sh - Chay MapReduce job bang Hadoop Streaming
 
 echo "=========================================================="
@@ -9,13 +10,29 @@ echo "=========================================================="
 INPUT_DIR="/bigdata_project/input/population_clean.csv"
 OUTPUT_DIR="/bigdata_project/output/population_top_population"
 
+if [ -z "$HADOOP_STREAMING_JAR" ]; then
+    if [ -n "$HADOOP_HOME" ]; then
+        HADOOP_STREAMING_JAR=$(find "$HADOOP_HOME/share/hadoop/tools/lib" -name "hadoop-streaming*.jar" | head -1)
+    fi
+fi
+
+if [ -z "$HADOOP_STREAMING_JAR" ] || [ ! -f "$HADOOP_STREAMING_JAR" ]; then
+    HADOOP_STREAMING_JAR=$(find /home/user01/hadoop/share/hadoop/tools/lib -name "hadoop-streaming*.jar" | head -1)
+fi
+
+if [ -z "$HADOOP_STREAMING_JAR" ] || [ ! -f "$HADOOP_STREAMING_JAR" ]; then
+    echo "[FAIL] Khong tim thay Hadoop Streaming JAR."
+    echo "Hay export HADOOP_STREAMING_JAR=/path/to/hadoop-streaming.jar"
+    exit 1
+fi
+
 # Xoa thu muc output cu neu co
 echo "[1/3] Xoa thu muc output cu tren HDFS..."
-hdfs dfs -rm -r -f $OUTPUT_DIR
+hdfs dfs -rm -r -f $OUTPUT_DIR || true
 
 # Chay job Hadoop Streaming
 echo "[2/3] Dang chay Hadoop Streaming..."
-hadoop jar /usr/local/hadoop/share/hadoop/tools/lib/hadoop-streaming-*.jar \
+hadoop jar "$HADOOP_STREAMING_JAR" \
     -files mapper.py,reducer.py \
     -mapper "python3 mapper.py" \
     -reducer "python3 reducer.py" \
