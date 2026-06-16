@@ -2,6 +2,9 @@
 set -e
 # run.sh - Chay MapReduce job bang Hadoop Streaming
 
+# Xac dinh thu muc chua script hien tai de lay duong dan tuyet doi cua mapper/reducer
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 echo "=========================================================="
 echo "  MAPREDUCE: POPULATION_TOP_DENSITY"
 echo "=========================================================="
@@ -33,7 +36,7 @@ hdfs dfs -rm -r -f $OUTPUT_DIR || true
 # Chay job Hadoop Streaming
 echo "[2/3] Dang chay Hadoop Streaming..."
 hadoop jar "$HADOOP_STREAMING_JAR" \
-    -files mapper.py,reducer.py \
+    -files "$SCRIPT_DIR/mapper.py,$SCRIPT_DIR/reducer.py" \
     -mapper "python3 mapper.py" \
     -reducer "python3 reducer.py" \
     -input $INPUT_DIR \
